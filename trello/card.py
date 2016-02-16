@@ -3,7 +3,7 @@ from __future__ import with_statement, print_function, absolute_import
 from dateutil import parser as dateparser
 from trello.checklist import Checklist
 from trello.label import Label
-
+from trello.attachment import Attachment
 
 class Card(object):
     """
@@ -318,6 +318,15 @@ class Card(object):
         self.client.fetch_json(
             '/cards/' + self.id + '/idLabels/' + label.id,
             http_method='DELETE')
+
+    def fetch_attachments(self):
+        attachmentlist = []
+        json_obj = self.client.fetch_json(
+            '/cards/' + self.id + '/attachments', )
+        for json in json_obj:
+            attachmentlist.append(Attachment.from_json(None,json))
+
+        return attachmentlist
 
     def attach(self, name=None, mimeType=None, file=None, url=None):
         """
